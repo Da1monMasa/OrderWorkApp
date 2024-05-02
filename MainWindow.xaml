@@ -1,0 +1,269 @@
+﻿<Window x:Class="OrderWorkAuto.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:local="clr-namespace:OrderWorkAuto"
+        mc:Ignorable="d"
+        Title="Заказ-наряд" MinHeight="1050" Width="1400">
+    <Window.Resources>
+        <Style x:Key="WatermarkTextBox" TargetType="{x:Type TextBox}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Grid>
+                            <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"/>
+                            <ScrollViewer x:Name="PART_ContentHost" VerticalAlignment="Center" Padding="5,0"/>
+                            <TextBlock Name="Watermark" Text="{TemplateBinding Tag}" Foreground="Gray" Margin="5,0" VerticalAlignment="Center"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsEnabled" Value="False"/>
+                                    <Condition Property="Text" Value=""/>
+                                </MultiTrigger.Conditions>
+                                <Setter Property="Visibility" TargetName="Watermark" Value="Collapsed"/>
+                            </MultiTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="45"/>
+            <RowDefinition Height="1000"/>
+        </Grid.RowDefinitions>
+
+        <!-- Заголовок -->
+        <StackPanel  Grid.Row="0"  VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Border Margin="5" Width="400" BorderBrush="Black" BorderThickness="2" CornerRadius="15" Background="Transparent">
+                <TextBlock Text="Заказ-наряд(создание)" HorizontalAlignment="Center" FontFamily="Times New Roman" FontSize="36" FontWeight="Bold"/> 
+            </Border>
+              
+        </StackPanel>
+        
+
+        <!-- Форма для ввода информации -->
+        <StackPanel Grid.Row="1" Margin="20">
+            
+            <StackPanel Orientation="Horizontal" Margin="0 5" HorizontalAlignment="Left">
+                <TextBlock VerticalAlignment="Center" FontSize="24" Text="ФИО заказчика: "></TextBlock>
+                <TextBox x:Name="FIOZakaz"  Width="300" FontSize="24"></TextBox>
+                <Label Height="25"  Content="Принято: "></Label>
+                <DatePicker x:Name="DatePickerAdmission"  SelectedDate="{x:Static sys:DateTime.Now}" DisplayDateStart="{x:Static sys:DateTime.Now}" DisplayDateEnd="2100-01-01" VerticalAlignment="Center" Margin="5"  />
+                <xctk:TimePicker Height="25" Name="TimePicker" Value="{x:Static sys:DateTime.Now}" />
+                <Label Height="25" Margin="5" Content="Срок исполнения: "></Label>
+                <DatePicker x:Name="DatePickerDeadline" DisplayDateStart="{x:Static sys:DateTime.Now}" DisplayDateEnd="2100-01-01" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="-10" />
+                <Label HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10 0 0 0" Content="Номер заказа: " FontSize="16" FontWeight="Bold"></Label>
+                <TextBox IsReadOnly="True" Height="20" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 3 0 0" Name="OrderNumberBox"></TextBox>
+                <Button Visibility="Visible" Height="20" Content="Сбросить номер до 1" Background="LightYellow" Margin="5 3 0 0" Click="Button_Click_3"></Button>
+
+            </StackPanel>
+            <StackPanel VerticalAlignment="Center" Orientation="Horizontal"  Margin="0 5" HorizontalAlignment="Left">
+                <TextBlock   FontSize="24" Text="Номер телефона заказчика: "></TextBlock>
+                <TextBox x:Name="ZakazTele" Width="170" FontSize="24"></TextBox>
+                <TextBlock  FontSize="24" Text="Марка: "></TextBlock>
+                <ComboBox Name="MarksAutos" FontSize="24" Margin="5 0" Width="200" IsEditable="True" IsTextSearchEnabled="True" TextSearch.TextPath="."></ComboBox>
+                <TextBlock  FontSize="24" Text="Модель: "></TextBlock>
+                <ComboBox Name="ModelAutos" FontSize="24" Margin="5 0" Width="200" IsEditable="True" IsTextSearchEnabled="True" TextSearch.TextPath="."></ComboBox>
+                <StackPanel Orientation="Horizontal">
+                    <RadioButton  Checked="CarTypeRadioButton1_Checked" x:Name="CarTypeRadioButton1" GroupName="CarType" Content="Легковой" Margin="5" FontSize="24" Style="{StaticResource RadioButtonStyle}">
+                        <RadioButton.Template>
+                            <ControlTemplate TargetType="RadioButton">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <Ellipse x:Name="dot" Width="16" Height="16" Fill="Transparent" VerticalAlignment="Center" Stroke="Black" StrokeThickness="2" />
+                                    <ContentPresenter VerticalAlignment="Center" Content="{TemplateBinding Content}" Margin="5,0,0,0" />
+                                </StackPanel>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsChecked" Value="True">
+                                        <Setter TargetName="dot" Property="Fill" Value="Red" />
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </RadioButton.Template>
+                    </RadioButton>
+                    <RadioButton x:Name="CarTypeRadioButton2" GroupName="CarType" Content="Грузовой" Margin="5" FontSize="24" Style="{StaticResource RadioButtonStyle}" 
+           Checked="CarTypeRadioButton2_Checked">
+                        <RadioButton.Template>
+                            <ControlTemplate TargetType="RadioButton">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <Ellipse x:Name="dot" Width="16" Height="16" Fill="Transparent" VerticalAlignment="Center" Stroke="Black" StrokeThickness="2" />
+                                    <ContentPresenter VerticalAlignment="Center" Content="{TemplateBinding Content}" Margin="5,0,0,0" />
+                                </StackPanel>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsChecked" Value="True">
+                                        <Setter TargetName="dot" Property="Fill" Value="Red" />
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </RadioButton.Template>
+                    </RadioButton>
+                </StackPanel>
+
+            </StackPanel>
+            <StackPanel Orientation="Horizontal"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                
+                <TextBlock Width="200" FontSize="24" Text="Название услуги:" VerticalAlignment="Center"/>
+                <ComboBox FontSize="24" x:Name="Services" Height="40" Width="600" HorizontalAlignment="Center" IsEditable="True" TextSearch.TextPath="ServiceName">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding ServiceName}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <Button Click="Button_Click_AddService" BorderThickness='0' BorderBrush="Transparent" Background="Transparent" Margin="2 0" Width="50" Height="50">
+                    <Image Source="/Resources/addplus.png" OpacityMask="#FD000000" Cursor="Pen" />
+                </Button>
+                <Button Click="Button_Click" BorderThickness='0' BorderBrush="Transparent" Background="Transparent" Margin="2 0" Width="50" Height="50">
+                    <Image Source="/Resources/minusicon.png" OpacityMask="#FD000000" Cursor="Pen" />
+                </Button>
+                
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0 10">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <!-- Задайте ширину TextBlock по содержимому -->
+                        <ColumnDefinition Width="Auto" />
+                        <!-- Задайте расстояние между TextBlock и ComboBox, например, Auto или определенную ширину -->
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="*" />
+                        <!-- Заполните оставшееся пространство ComboBox -->
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" Margin="5" FontSize="24" Width="100" Text="Деталь:" VerticalAlignment="Center" />
+
+                    <StackPanel Orientation="Horizontal" Grid.Column="2">
+                        <ComboBox Grid.Column="2" FontSize="24" x:Name="DetailsBox" Height="40" Width="400" IsEditable="True" IsTextSearchEnabled="True" TextSearch.TextPath="DetalName">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding DetalName}" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        <Button Click="Button_Click_AddDetails" BorderThickness='0' BorderBrush="Transparent" Background="Transparent" Margin="2 0" Width="50" Height="50">
+                            <Image Source="/Resources/addplus.png" OpacityMask="#FD000000" Cursor="Pen" />
+                        </Button>
+                        <Button Click="Button_Click_RemoveDetails" BorderThickness='0' BorderBrush="Transparent" Background="Transparent" Margin="2 0" Width="50" Height="50">
+                            <Image Source="/Resources/minusicon.png" OpacityMask="#FD000000" Cursor="Pen" />
+                        </Button>
+                    </StackPanel>
+                    
+                  
+
+                    <StackPanel Grid.Column="3" Orientation="Horizontal">
+                        <Label Content="Контрагент" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24"></Label>
+                        <ComboBox Grid.Column="3" Margin="5" FontSize="24" x:Name="CounterAgentComboBox" Height="40" Width="200" IsEditable="True" IsTextSearchEnabled="True" TextSearch.TextPath="AgentName" SelectionChanged="CounterAgent_SelectionChanged">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding AgentName}" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        <Button Click="Button_Click_5" BorderThickness='0' BorderBrush="Transparent" Background="Transparent" Margin="2 0" Width="50" Height="50">
+                            <Image Source="/Resources/minusicon.png" OpacityMask="#FD000000" Cursor="Pen" />
+                        </Button>
+                    </StackPanel>
+
+                    
+                </Grid>
+               
+            </StackPanel>
+           
+            <StackPanel MaxHeight="300" Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Height="40" Content="Очистить услуги и детали" Background="LightYellow" FontStyle="Oblique" FontWeight="Bold" Width="175" Margin="0 0 5 0" Click="Button_Click_4"></Button>
+                <DataGrid PreparingCellForEdit="ServicesGrid_PreparingCellForEdit" BeginningEdit="ServicesGrid_BeginningEdit" KeyUp="ServicesGrid_KeyUp"   CellEditEnding="ServicesGrid_CellEditEnding" MaxWidth="600" FontSize="20" Name="ServicesGrid" AutoGenerateColumns="False"  RowHeaderWidth="0" ColumnHeaderHeight="34.5" CanUserAddRows="False" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" SelectionChanged="ServicesGrid_SelectionChanged">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Выполняемые работы" Binding="{Binding ServiceName}" MaxWidth="400">
+                            <!-- ... Остальной код для этого столбца ... -->
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="Цена" Binding="{Binding Cost, StringFormat=N2}" Width="Auto">
+                            <!-- ... Остальной код для столбца "Сумма" ... -->
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="Количество" IsReadOnly="False" Binding="{Binding Count}" Width="Auto">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style>
+                                    <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                    <Setter Property="TextBlock.MinWidth" Value="150" />
+                                    <!-- Установите минимальную ширину -->
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                            <DataGridTextColumn.EditingElementStyle>
+                                <Style>
+                                    <Setter Property="TextBox.TextWrapping" Value="Wrap" />
+                                    <Setter Property="TextBox.MinWidth" Value="150" />
+                                    <!-- Установите минимальную ширину -->
+                                </Style>
+                            </DataGridTextColumn.EditingElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="Итого" Binding="{Binding TotalCost, StringFormat=N2}" Width="Auto">
+                            <!-- ... Остальной код для столбца "Итог" ... -->
+                        </DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <Grid Width="20" Background="Transparent">
+                    
+                </Grid>
+                <DataGrid FontSize="20" Width="465" AutoGenerateColumns="False" Name="DetailsGrid" IsReadOnly="False" CanUserAddRows="False" PreparingCellForEdit="DetailsGrid_PreparingCellForEdit" RowHeaderWidth="0"  CellEditEnding="DetailsGrid_CellEditEnding" HeadersVisibility="Column">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Комплектующие" Binding="{Binding DetalName}" />
+                        <DataGridTextColumn Header="Количество" Binding="{Binding Quantity}" />
+                        <DataGridTextColumn Header="Цена" Binding="{Binding Cost, StringFormat=N2}" />
+                        <DataGridTextColumn Header="Итого" Binding="{Binding TotalCost, StringFormat=N2}"  />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Border Background="LightYellow"  CornerRadius="10" BorderThickness="3" BorderBrush="Black" Width="250" Margin="5">
+                    <Button Click="Button_Click_2" FontSize="24" BorderThickness="0" Background="Transparent" Content="Предпросмотр" Width="auto" Height="auto" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10"></Button>
+
+                </Border>
+                <Border Height="60" CornerRadius="10" BorderThickness="3" BorderBrush="Black" Width="290">
+                    <Button Click="Button_Click_1" FontSize="24" BorderThickness="0" Background="Transparent" Content="Оформить заказ-наряд" Width="275" Height="auto" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10"></Button>
+
+                </Border>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Итого по услугам:" FontSize="24"></Label>
+                <Label Name="SummLabel" Width="auto" HorizontalAlignment="Left" FontSize="24" Height="auto"></Label>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label  Content="Итого по комплектующим:" FontSize="24" HorizontalAlignment="Left"/>
+                <Label x:Name="SummLabel2" Content="" FontSize="24" HorizontalAlignment="Left"/>
+            </StackPanel>
+           
+            <StackPanel  Orientation="Horizontal" Width="auto">
+                <Label  Content="Итого всего:" FontSize="24" HorizontalAlignment="Left"/>
+                <Label x:Name="TotalCostLabel" Content="" FontSize="24" HorizontalAlignment="Left"/>
+            </StackPanel>
+            <StackPanel Visibility="Hidden" Height="1" Orientation="Horizontal">
+                <Label FontSize="24" Width="270" HorizontalAlignment="Left" Margin="0,5,0,0" Content="Размер скидки(общая):"></Label>
+                <TextBox Name="DiscountTextBox" Width="175" Height="30" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top" TextChanged="DiscountTextBox_TextChanged"/>
+            </StackPanel>
+   
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Скидка на услуги:" FontSize="24"></Label>
+                <TextBox Name="DiscountServBox" Width="175" Height="30" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top" TextChanged="DiscountServBox_TextChanged"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Скидка на комплектующие:" FontSize="24"></Label>
+                <TextBox Name="DiscountDetailBox" Width="175" Height="30" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top" TextChanged="DiscountDetailBox_TextChanged"/>
+            </StackPanel>
+           
+            
+            
+           
+        </StackPanel>
+       
+
+    </Grid>
+    
+</Window>
